@@ -19,7 +19,6 @@
 - 直接双击 FileMerger.exe
 - 按照页面提示操作
 ![](https://github.com/surfsky/FileMerger/blob/master/Images/form.png)
-![](https://github.com/surfsky/QmlExplorer/blob/master/Images/App_Clock.png)
          
 # 控制台方式运行
 
