@@ -1,11 +1,33 @@
-ï»¿# LineCounter
-è®¡ç®—è½¯ä»¶è¡Œæ•°ï¼Œåˆå¹¶è¾“å‡ºä»£ç æ–‡ä»¶ï¼Œå¯ä¾›è½¯ä»¶è‘—ä½œæƒç”³æŠ¥ç”¨
+# FileMerger
+
+- Ô´ÂëÍ³¼Æ¼°ºÏ²¢¹¤¾ß£¬¿ÉÓÃÓÚÖø×÷È¨Éê±¨
+- ×÷Õß£ºhttps://www.github.com/surfsky/
 
 
-# åŠŸèƒ½
+# ¹¦ÄÜ
 
-- ç®€å•ç»Ÿè®¡ï¼šä»£ç è¡Œæ•°ï¼Œå„æ‰©å±•åæ–‡ä»¶æ•°ç›®
-- åˆå¹¶è¾“å‡ºä»£ç æ–‡ä»¶
-- è¿‡æ»¤è¿žç»­çš„ç©ºè¡Œ
-- è¿‡æ»¤è¿žç»­æ³¨é‡Šè¡Œ
-- å¯æŒ‡å®šæ–‡ä»¶ç¼–ç 
+- ºÏ²¢Ô´Âë
+- ¿ÉÉèÖÃÎÄ±¾±àÂë·½Ê½
+- ¿É¿ØÖÆÊä³öÐÐÊý
+- ¿ÉÌø¹ýÁ¬Ðø¿ÕÐÐ
+- ¿ÉÌø¹ýÁ¬Ðø×¢ÊÍÐÐ
+- ¿ÉÍ³¼Æ¸÷ÖÖÎÄ¼þµÄÊýÄ¿ºÍ´úÂëÐÐÊý
+
+
+# ´°¿Ú·½Ê½ÔËÐÐ
+
+- Ö±½ÓË«»÷ FileMerger.exe
+- °´ÕÕÒ³ÃæÌáÊ¾²Ù×÷
+- ![](./images/form.png)
+
+         
+# ¿ØÖÆÌ¨·½Ê½ÔËÐÐ
+
+```
+FileMerger.exe  .\Test\  out.txt  9000
+```
+
+- ²ÎÊý1£ºÔ´´úÂëÄ¿Â¼
+- ²ÎÊý2£ºÊä³öÎÄ¼þÂ·¾¶
+- ²ÎÊý3£ºÊä³öÎÄ¼þÐÐÊý
+- ![](./images/console.png)

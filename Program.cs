@@ -4,87 +4,101 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Configuration;
+using System.Windows.Forms;
 
-namespace LineCounter
+namespace FileMerger
 {
+    /// <summary>计数器</summary>
+    public class FileCounter
+    {
+        public int Files;
+        public int Lines;
+    }
+
+
     class Program
     {
-        // 配置信息
-        static string _root;             // 根目录
-        static string _outFile;          // 输出的合并文件名称
-        static long _maxLines = 2000;    // 最大合并输出行数
-        static Encoding _encoding = Encoding.GetEncoding(ConfigurationManager.AppSettings["Encoding"]);                     // 字符集
-        static int _maxContinuousBlankLines = int.Parse(ConfigurationManager.AppSettings["MaxContinuousBlankLines"]);       // 允许连续空行数
-        static int _maxContinuousCommentLines = int.Parse(ConfigurationManager.AppSettings["MaxContinuousCommentLines"]);   // 允许连续注释行数
-        static string[] _exts = ConfigurationManager.AppSettings["extensions"]
-            .Replace(" ", "")
-            .Replace("\r", "")
-            .Replace("\n", "")
-            .Replace("\t", "")
-            .Split('|', ',', ';');
-
-        // 运行时信息
-        static Dictionary<string, Counter> _counter = new Dictionary<string, Counter>();   // 统计器
-        static long _totalLines = 0;     // 代码行数
-        static StreamWriter _sw;         // 文件输出器
+        // 计数字典（文件类型-文件数-代码行数）
+        static Dictionary<string, FileCounter> _counter = new Dictionary<string, FileCounter>();
 
 
-        // 入口
+        // entry
+        [STAThread]
         static void Main(string[] args)
         {
             Log("-----------------------------------------");
-            Log("LineCounter");
-            Log("surfsky.cnblogs.com");
-            Log("LastUpdated: 2016-04-15");
+            Log("FileMerger");
+            Log("Version {0}", Helper.GetVersion());
+            Log("https://www.github.com/surfsky/");
+            Log("2019-06");
             Log("-----------------------------------------");
 
-            // prepare
+
             if (args.Length == 0)
+                Application.Run(new FormMain());
+            else
             {
-                Log("请输入");
-                Log("参数1：待统计目录的路径");
-                Log("参数2[可选]：合并输出文件名路径");
-                Log("参数3[可选]：合并输出文件最大行数（默认2000行)");
-                Log("");
-                Log("按任意键退出");
-                Console.ReadKey();
+                var cfg = new Config();
+                cfg.Folder = args[0];
+                cfg.OutFile = args[1];
+                cfg.OutLines = Convert.ToInt32(args[2]);
+                cfg.Extensions = ConfigurationManager.AppSettings["Extensions"].ToArray();
+                cfg.SkipBlankLines = ConfigurationManager.AppSettings["SkipBlankLines"].ToBool();
+                cfg.SkipCommentLines = ConfigurationManager.AppSettings["SkipCommentLines"].ToBool();
+                cfg.OpenWhenFinished = ConfigurationManager.AppSettings["OpenWhenFinished"].ToBool();
+                cfg.Encoding = ConfigurationManager.AppSettings["Encoding"];
+                RunConsole(cfg);
+            }
+        }
+
+
+        // console
+        public static void RunConsole(Config cfg)
+        {
+            // 参数校验
+            var folder = cfg.Folder;
+            var outFile = cfg.OutFile;
+            var outLines = cfg.OutLines;
+            if (folder.IsEmpty())
+            {
+                MessageBox.Show("请录入源代码目录", "错误");
                 return;
             }
-            _root = args[0];
-            if (args.Length >= 2) _outFile = args[1];
-            if (args.Length >= 2) _maxLines = Convert.ToInt32(args[2]);
 
-            // start
-            _totalLines = 0;
-            _sw = (_outFile == null) ? null : new StreamWriter(_outFile);
+            // 处理
+            long totleLines = 0;
+            StreamWriter sw = (outFile == null) ? null : new StreamWriter(outFile);
+            Log(ConfigurationManager.AppSettings["about"]);
             Log("{0}", System.DateTime.Now);
-            ProcessFolder(_root);
-            if (_sw != null)
-                _sw.Close();
+            ProcessFolder(cfg, folder, ref totleLines, ref sw);
+            if (sw != null)
+                sw.Close();
 
-            // end
+            // 显示统计信息
             int files, lines;
             GetTotalFiles(out files, out lines);
             Log("");
             Log("-----------------------------------------");
-            Log("-- " + _root);
-            Log("-- {0}", System.DateTime.Now);
+            Log("-- " + folder);
             Log("-----------------------------------------");
             Log("类别\t文件数\t代码行数\t平均");
             Log("----\t------\t--------\t--------");
             foreach (string key in _counter.Keys)
             {
-                Counter cnt = _counter[key];
+                FileCounter cnt = _counter[key];
                 Log("{0}\t{1}\t{2}\t{3}", key, cnt.Files, cnt.Lines, GetAverage(cnt.Lines, cnt.Files));
             }
             Log("----\t------\t--------");
-            Log("    \t{0}\t{1}\t{2}", files, lines, GetAverage(lines, files));
+            Log("合计\t{0}\t{1}\t{2}", files, lines, GetAverage(lines, files));
             Log("");
-            //Log("{0}", _root);
-            //Console.ReadKey();
+            Log("{0}", System.DateTime.Now);
+            Log("{0}", folder);
+
+            // 打开输出文件
+            if (cfg.OpenWhenFinished && !cfg.OutFile.IsEmpty())
+                System.Diagnostics.Process.Start(cfg.OutFile);
         }
 
-        // 统计平均每文件代码行数
         static double GetAverage(int lines, int files)
         {
             if (files == 0) return 0;
@@ -99,14 +113,14 @@ namespace LineCounter
             lines = 0;
             foreach (string key in _counter.Keys)
             {
-                Counter cnt = _counter[key];
+                FileCounter cnt = _counter[key];
                 files += cnt.Files;
                 lines += cnt.Lines;
             }
         }
 
         // 处理一个目录
-        static void ProcessFolder(string folder)
+        static void ProcessFolder(Config cfg, string folder, ref long totleLines, ref StreamWriter sw)
         {
             if (!System.IO.Directory.Exists(folder))
                 return;
@@ -114,7 +128,7 @@ namespace LineCounter
 
             // 递归子目录
             foreach (DirectoryInfo info in di.GetDirectories())
-                ProcessFolder(info.FullName);
+                ProcessFolder(cfg, info.FullName, ref totleLines, ref sw);
 
             // 处理目录内的文件
             Log("-----------------------------------------");
@@ -126,99 +140,63 @@ namespace LineCounter
                 if (ext.Length > 0) 
                     ext = ext.Remove(0, 1);
 
-                // 过滤不在清单中的文件
-                if (ext == "" || !_exts.Contains(ext))
+                if (ext == "" || !cfg.Extensions.Contains(ext))
                 {
                     Log("跳过 {0}", fi.FullName);
                     continue;
                 }
 
-                // 处理文件
-                FileCounter fc = ProcessFile(fi.FullName);
+                // 文件行数
+                int line = ProcessFile(cfg, fi.FullName, ref totleLines, ref sw);
                 
-                // 根据扩展名进行统计
+                // 统计文件数和行数
                 if (!_counter.Keys.Contains(ext))
-                    _counter.Add(ext, new Counter());
+                    _counter.Add(ext, new FileCounter());
                 _counter[ext].Files += 1;
-                _counter[ext].Lines += fc.Lines;
-                Log("行数 {0}  {1}", fc.Lines, fi.FullName);
+                _counter[ext].Lines += line;
+                Log("行数 {0}  {1}", line, fi.FullName);
             }
             Log("-----------------------------------------");
         }
 
-        // 处理单个文本文件，返回文件代码行数（以后可考虑优化，返回一个结构体）
-        static FileCounter ProcessFile(string filePath)
+        // 处理单个文本文件
+        static int ProcessFile(Config cfg, string filePath, ref long totleLines, ref StreamWriter sw)
         {
-            FileCounter fc = new FileCounter(filePath, _encoding);
-            string relativePath = filePath.Substring(_root.Length);
-            WriteLineToFile(@"【文件】 " + relativePath, false);
-
-            // 遍历代码行
-            using (StreamReader sr = new StreamReader(filePath, fc.Encoding))
+            int lines = 0;
+            int blankLines = 0;
+            int commentLines = 0;
+            WriteLineToFile(cfg, sw, @"§ " + filePath, totleLines);
+            using (StreamReader sr = new StreamReader(filePath, cfg.Enc))
             {
-                int blankLines = 0;
-                int commentLines = 0;
                 while (!sr.EndOfStream)
                 {
+                    lines++;
                     string line = sr.ReadLine();
-                    
-                    // 跳过连续注释行
-                    if (!IsCommentLine(line))
-                        commentLines = 0;
-                    else
-                    {
-                        commentLines++;
-                        fc.CommentLines++;
-                        if (commentLines >= _maxContinuousCommentLines)
-                            continue;
-                    }
 
-                    // 跳过连续空行
-                    if (line != "")
-                        blankLines = 0;
-                    else
-                    {
-                        blankLines++;
-                        fc.BlankLines++;
-                        if (blankLines >= _maxContinuousBlankLines)
-                            continue;
-                    }
+                    // 跳过连续空行；跳过连续备注行
+                    blankLines = !line.IsEmpty() ? 0 : blankLines + 1;
+                    commentLines = !line.IsCommentLine() ? 0 : commentLines + 1;
+                    if (cfg.SkipBlankLines && blankLines > 1)     continue;
+                    if (cfg.SkipCommentLines && commentLines > 1) continue;
 
-                    // 输出到文件
-                    WriteLineToFile(line, true);
-                    fc.Lines++;
+                    //
+                    WriteLineToFile(cfg, sw, line, totleLines);
                 }
             }
-
-            //
-            WriteLineToFile("", false);
-            WriteLineToFile("", false);
-            _totalLines += fc.Lines;
-            return fc;
+            WriteLineToFile(cfg, sw, "", totleLines);
+            WriteLineToFile(cfg, sw, "", totleLines);
+            totleLines += lines;
+            return lines;
         }
 
-        
-        // 是否是注释行
-        static bool IsCommentLine(string line)
+        /// <summary>输出一行文本（如果未超出总行数限制）</summary>
+        private static void WriteLineToFile(Config cfg, StreamWriter sw, string line, long totleCnt)
         {
-            line = line.TrimStart();
-            if (line.Length < 2)
-                return false;
-            else
-                return line.Substring(0, 2) == "//";
+            if (sw != null && totleCnt < cfg.OutLines)
+                sw.WriteLine(line);
         }
 
-        // 输出代码行（到文件）
-        private static void WriteLineToFile(string line, bool countLine=true)
-        {
-            if (_sw != null && _totalLines < _maxLines)
-                _sw.WriteLine(line);
-            if (countLine)
-                _totalLines++;
-        }
-
-
-        // 日志（到控制台）
+        // 写日志
         static void Log(string format, params object[] parameters)
         {
             Console.WriteLine(format, parameters);
