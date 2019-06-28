@@ -18,7 +18,7 @@
 
 - 直接双击 FileMerger.exe
 - 按照页面提示操作
-- ![](https://github.com/surfsky/FileMerger/images/form.png)
+- ![](https://github.com/surfsky/FileMerger/blob/master/images/form.png)
 
          
 # 控制台方式运行
@@ -30,4 +30,4 @@ FileMerger.exe  .\Test\  out.txt  9000
 - 参数1：源代码目录
 - 参数2：输出文件路径
 - 参数3：输出文件行数
-- ![](https://github.com/surfsky/FileMerger/images/console.png)
+- ![](https://github.com/surfsky/FileMerger/blob/master/images/console.png)
