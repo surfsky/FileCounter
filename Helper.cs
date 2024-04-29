@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileMerger
+namespace FileCounter
 {
     /// <summary>
     /// 静态辅助方法
@@ -52,5 +53,17 @@ namespace FileMerger
             text = text.TrimStart();
             return (text.StartsWith("//") || text.StartsWith("#"));
         }
+
+        /// <summary>转化为逗号分隔的字符串</summary>
+        public static string ToSeparatedString(this IEnumerable source, char seperator = ',')
+        {
+            if (source == null)
+                return "";
+            string txt = "";
+            foreach (var item in source)
+                txt += item.ToString() + seperator;
+            return txt.TrimEnd(seperator);
+        }
+
     }
 }

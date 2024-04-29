@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FileMerger
+namespace FileCounter
 {
     public partial class FormMain : Form
     {
@@ -28,11 +28,14 @@ namespace FileMerger
             this.lblVersion.Parent = picBanner;
 
             //
-            this.tbEncoding.Text = ConfigurationManager.AppSettings["Encoding"].Trim();
-            this.tbExtensions.Text = ConfigurationManager.AppSettings["Extensions"].Trim();
-            this.chkSkipBlankLines.Checked = ConfigurationManager.AppSettings["SkipBlankLines"].ToBool();
-            this.chkSkipCommentLines.Checked = ConfigurationManager.AppSettings["SkipCommentLines"].ToBool();
-            this.chkOpenWhenFinished.Checked = ConfigurationManager.AppSettings["OpenWhenFinished"].ToBool();
+            var cfg = Config.ReadFromAppConfig();
+            this.tbEncoding.Text = cfg.Encoding;
+            this.tbExtensions.Text = cfg.Extensions.ToSeparatedString();
+            this.tbSkipSubFolders.Text = cfg.SkipSubFolders.ToSeparatedString();
+            this.chkSkipHidden.Checked = cfg.SkipHidden;
+            this.chkSkipBlankLines.Checked = cfg.SkipBlankLines;
+            this.chkSkipCommentLines.Checked = cfg.SkipCommentLines;
+            this.chkOpenWhenFinished.Checked = cfg.OpenWhenFinished;
         }
 
         // 设置源程序目录
@@ -70,15 +73,17 @@ namespace FileMerger
         private void btnGo_Click(object sender, EventArgs e)
         {
             var cfg = new Config();
-            cfg.Folder = this.tbFolder.Text;
+            cfg.RootFolder = this.tbFolder.Text;
             cfg.Encoding = this.tbEncoding.Text;
+            cfg.Extensions = this.tbExtensions.Text.ToArray();
             cfg.SkipBlankLines = this.chkSkipBlankLines.Checked;
             cfg.SkipCommentLines = this.chkSkipCommentLines.Checked;
-            cfg.Extensions = this.tbExtensions.Text.ToArray();
+            cfg.SkipSubFolders = this.tbSkipSubFolders.Text.ToArray();
+            cfg.SkipHidden = this.chkSkipHidden.Checked;
             cfg.OpenWhenFinished = this.chkOpenWhenFinished.Checked;
             cfg.OutFile = this.tbOutFile.Text;
             cfg.OutLines = (int)this.tbLines.Value;
-            Program.RunConsole(cfg);
+            Scanner.Run(cfg);
         }
 
     }

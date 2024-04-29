@@ -1,4 +1,4 @@
-﻿namespace FileMerger
+﻿namespace FileCounter
 {
     partial class FormMain
     {
@@ -52,6 +52,11 @@
             this.btnFile = new System.Windows.Forms.Button();
             this.tbEncoding = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.tbSkipSubFolders = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.chkSkipHidden = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picBanner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbLines)).BeginInit();
             this.SuspendLayout();
@@ -69,15 +74,15 @@
             // 
             this.tbFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbFolder.Location = new System.Drawing.Point(82, 114);
+            this.tbFolder.Location = new System.Drawing.Point(114, 114);
             this.tbFolder.Name = "tbFolder";
-            this.tbFolder.Size = new System.Drawing.Size(561, 21);
+            this.tbFolder.Size = new System.Drawing.Size(600, 21);
             this.tbFolder.TabIndex = 1;
             // 
             // btnFolder
             // 
             this.btnFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFolder.Location = new System.Drawing.Point(659, 112);
+            this.btnFolder.Location = new System.Drawing.Point(730, 112);
             this.btnFolder.Name = "btnFolder";
             this.btnFolder.Size = new System.Drawing.Size(75, 23);
             this.btnFolder.TabIndex = 2;
@@ -88,26 +93,26 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 159);
+            this.label2.Location = new System.Drawing.Point(11, 221);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 24);
+            this.label2.Size = new System.Drawing.Size(77, 24);
             this.label2.TabIndex = 3;
-            this.label2.Text = "需处理的\r\n文件扩展名";
+            this.label2.Text = "需处理的文件\r\n扩展名";
             // 
             // tbExtensions
             // 
             this.tbExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbExtensions.Location = new System.Drawing.Point(82, 156);
+            this.tbExtensions.Location = new System.Drawing.Point(114, 218);
             this.tbExtensions.Multiline = true;
             this.tbExtensions.Name = "tbExtensions";
-            this.tbExtensions.Size = new System.Drawing.Size(652, 159);
+            this.tbExtensions.Size = new System.Drawing.Size(691, 72);
             this.tbExtensions.TabIndex = 4;
             // 
             // btnGo
             // 
             this.btnGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGo.Location = new System.Drawing.Point(568, 499);
+            this.btnGo.Location = new System.Drawing.Point(639, 499);
             this.btnGo.Name = "btnGo";
             this.btnGo.Size = new System.Drawing.Size(75, 23);
             this.btnGo.TabIndex = 5;
@@ -118,7 +123,7 @@
             // btnAbout
             // 
             this.btnAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAbout.Location = new System.Drawing.Point(659, 499);
+            this.btnAbout.Location = new System.Drawing.Point(730, 499);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(75, 23);
             this.btnAbout.TabIndex = 6;
@@ -129,7 +134,9 @@
             // chkSkipBlankLines
             // 
             this.chkSkipBlankLines.AutoSize = true;
-            this.chkSkipBlankLines.Location = new System.Drawing.Point(218, 458);
+            this.chkSkipBlankLines.Checked = true;
+            this.chkSkipBlankLines.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSkipBlankLines.Location = new System.Drawing.Point(114, 343);
             this.chkSkipBlankLines.Name = "chkSkipBlankLines";
             this.chkSkipBlankLines.Size = new System.Drawing.Size(96, 16);
             this.chkSkipBlankLines.TabIndex = 7;
@@ -139,16 +146,18 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(11, 458);
+            this.label3.Location = new System.Drawing.Point(11, 345);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 12);
+            this.label3.Size = new System.Drawing.Size(65, 12);
             this.label3.TabIndex = 8;
-            this.label3.Text = "选项";
+            this.label3.Text = "文件处理时";
             // 
             // chkSkipCommentLines
             // 
             this.chkSkipCommentLines.AutoSize = true;
-            this.chkSkipCommentLines.Location = new System.Drawing.Point(354, 459);
+            this.chkSkipCommentLines.Checked = true;
+            this.chkSkipCommentLines.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSkipCommentLines.Location = new System.Drawing.Point(250, 345);
             this.chkSkipCommentLines.Name = "chkSkipCommentLines";
             this.chkSkipCommentLines.Size = new System.Drawing.Size(108, 16);
             this.chkSkipCommentLines.TabIndex = 9;
@@ -162,7 +171,7 @@
             this.picBanner.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picBanner.BackgroundImage")));
             this.picBanner.Location = new System.Drawing.Point(0, 0);
             this.picBanner.Name = "picBanner";
-            this.picBanner.Size = new System.Drawing.Size(747, 83);
+            this.picBanner.Size = new System.Drawing.Size(818, 83);
             this.picBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picBanner.TabIndex = 10;
             this.picBanner.TabStop = false;
@@ -175,15 +184,15 @@
             this.lblApp.ForeColor = System.Drawing.Color.White;
             this.lblApp.Location = new System.Drawing.Point(22, 25);
             this.lblApp.Name = "lblApp";
-            this.lblApp.Size = new System.Drawing.Size(166, 27);
+            this.lblApp.Size = new System.Drawing.Size(180, 27);
             this.lblApp.TabIndex = 11;
-            this.lblApp.Text = "File Merger";
+            this.lblApp.Text = "File Counter";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.Transparent;
-            this.label5.Location = new System.Drawing.Point(338, 206);
+            this.label5.Location = new System.Drawing.Point(338, 256);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(0, 12);
             this.label5.TabIndex = 12;
@@ -192,7 +201,7 @@
             // 
             this.lblVersion.AutoSize = true;
             this.lblVersion.ForeColor = System.Drawing.Color.White;
-            this.lblVersion.Location = new System.Drawing.Point(194, 40);
+            this.lblVersion.Location = new System.Drawing.Point(216, 39);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(23, 12);
             this.lblVersion.TabIndex = 13;
@@ -205,7 +214,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(11, 419);
+            this.label7.Location = new System.Drawing.Point(11, 418);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 12);
             this.label7.TabIndex = 14;
@@ -213,7 +222,7 @@
             // 
             // tbLines
             // 
-            this.tbLines.Location = new System.Drawing.Point(82, 417);
+            this.tbLines.Location = new System.Drawing.Point(114, 412);
             this.tbLines.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -232,9 +241,9 @@
             // 
             this.tbOutFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbOutFile.Location = new System.Drawing.Point(82, 376);
+            this.tbOutFile.Location = new System.Drawing.Point(114, 375);
             this.tbOutFile.Name = "tbOutFile";
-            this.tbOutFile.Size = new System.Drawing.Size(561, 21);
+            this.tbOutFile.Size = new System.Drawing.Size(600, 21);
             this.tbOutFile.TabIndex = 17;
             this.tbOutFile.Text = "out.txt";
             // 
@@ -252,17 +261,16 @@
             this.chkOpenWhenFinished.AutoSize = true;
             this.chkOpenWhenFinished.Checked = true;
             this.chkOpenWhenFinished.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkOpenWhenFinished.Location = new System.Drawing.Point(82, 458);
+            this.chkOpenWhenFinished.Location = new System.Drawing.Point(114, 449);
             this.chkOpenWhenFinished.Name = "chkOpenWhenFinished";
-            this.chkOpenWhenFinished.Size = new System.Drawing.Size(84, 16);
+            this.chkOpenWhenFinished.Size = new System.Drawing.Size(15, 14);
             this.chkOpenWhenFinished.TabIndex = 18;
-            this.chkOpenWhenFinished.Text = "完成时打开";
             this.chkOpenWhenFinished.UseVisualStyleBackColor = true;
             // 
             // btnFile
             // 
             this.btnFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFile.Location = new System.Drawing.Point(659, 374);
+            this.btnFile.Location = new System.Drawing.Point(730, 374);
             this.btnFile.Name = "btnFile";
             this.btnFile.Size = new System.Drawing.Size(75, 23);
             this.btnFile.TabIndex = 19;
@@ -274,26 +282,79 @@
             // 
             this.tbEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbEncoding.Location = new System.Drawing.Point(82, 335);
+            this.tbEncoding.Location = new System.Drawing.Point(114, 306);
             this.tbEncoding.Name = "tbEncoding";
-            this.tbEncoding.Size = new System.Drawing.Size(652, 21);
+            this.tbEncoding.Size = new System.Drawing.Size(691, 21);
             this.tbEncoding.TabIndex = 21;
             this.tbEncoding.Text = "UTF8";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(11, 340);
+            this.label6.Location = new System.Drawing.Point(11, 310);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(41, 12);
             this.label6.TabIndex = 20;
             this.label6.Text = "字符集";
             // 
+            // tbSkipSubFolders
+            // 
+            this.tbSkipSubFolders.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbSkipSubFolders.Location = new System.Drawing.Point(114, 151);
+            this.tbSkipSubFolders.Name = "tbSkipSubFolders";
+            this.tbSkipSubFolders.Size = new System.Drawing.Size(691, 21);
+            this.tbSkipSubFolders.TabIndex = 23;
+            this.tbSkipSubFolders.Text = "obj,bin,images";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(11, 155);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(65, 12);
+            this.label8.TabIndex = 22;
+            this.label8.Text = "跳过子目录";
+            // 
+            // chkSkipHidden
+            // 
+            this.chkSkipHidden.AutoSize = true;
+            this.chkSkipHidden.Checked = true;
+            this.chkSkipHidden.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSkipHidden.Location = new System.Drawing.Point(114, 188);
+            this.chkSkipHidden.Name = "chkSkipHidden";
+            this.chkSkipHidden.Size = new System.Drawing.Size(15, 14);
+            this.chkSkipHidden.TabIndex = 24;
+            this.chkSkipHidden.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(11, 187);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(77, 12);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "跳过隐藏目录";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(12, 451);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(65, 12);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "完成时打开";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(746, 534);
+            this.ClientSize = new System.Drawing.Size(817, 534);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.chkSkipHidden);
+            this.Controls.Add(this.tbSkipSubFolders);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.tbEncoding);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.btnFile);
@@ -316,9 +377,10 @@
             this.Controls.Add(this.btnFolder);
             this.Controls.Add(this.tbFolder);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FileMerger";
+            this.Text = "FileCounter";
             this.Load += new System.EventHandler(this.FormMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picBanner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbLines)).EndInit();
@@ -352,5 +414,10 @@
         private System.Windows.Forms.Button btnFile;
         private System.Windows.Forms.TextBox tbEncoding;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox tbSkipSubFolders;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox chkSkipHidden;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
     }
 }
